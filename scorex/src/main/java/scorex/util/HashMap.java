@@ -182,6 +182,27 @@ public class HashMap<K, V> implements Map<K, V> {
         return e;
     }
 
+    @Override
+    public String toString() {
+        Iterator<Map.Entry<K,V>> i = entrySet().iterator();
+        if (! i.hasNext())
+            return "{}";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append('{');
+        for (;;) {
+            Map.Entry<K,V> e = i.next();
+            K key = e.getKey();
+            V value = e.getValue();
+            sb.append(key == this ? "(this Map)" : key);
+            sb.append('=');
+            sb.append(value == this ? "(this Map)" : value);
+            if (!i.hasNext())
+                return sb.append('}').toString();
+            sb.append(',').append(' ');
+        }
+    }
+
     static class Entry<K, V> implements Map.Entry<K, V> {
         final K key;
         V value;
@@ -210,6 +231,32 @@ public class HashMap<K, V> implements Map<K, V> {
             V oldValue = value;
             value = newValue;
             return oldValue;
+        }
+
+        public final boolean equals(Object o) {
+            if (!(o instanceof Map.Entry))
+                return false;
+            @SuppressWarnings("unchecked")
+            Map.Entry<K,V> e = (Map.Entry<K,V>)o;
+            Object k1 = getKey();
+            Object k2 = e.getKey();
+            if (k1 == k2 || (k1 != null && k1.equals(k2))) {
+                Object v1 = getValue();
+                Object v2 = e.getValue();
+                if (v1 == v2 || (v1 != null && v1.equals(v2)))
+                    return true;
+            }
+            return false;
+        }
+
+        public final int hashCode() {
+            return (key==null ? 0 : key.hashCode()) ^
+                    (value==null ? 0 : value.hashCode());
+        }
+
+        @Override
+        public final String toString() {
+            return getKey() + "=" + getValue();
         }
     }
 
