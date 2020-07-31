@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'com.jfrog.bintray' version '1.8.5'
 }
 
 java {
@@ -17,8 +18,40 @@ test {
     useJUnitPlatform()
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier 'javadoc'
+    from javadoc.destinationDir
+}
+
+def projectName = 'javaee-scorex'
+def repoUrl = 'https://github.com/sink772/javaee-scorex'
 def snapshotSuffix = rootProject.hasProperty('release') ? '' : '-SNAPSHOT'
 version = VERSION + snapshotSuffix
+
+def pomConfig = {
+    licenses {
+        license {
+            name "GNU General Public License, version 2"
+            url "https://opensource.org/licenses/gpl-2.0"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "sink772"
+            name "Jaechang Namgoong"
+            email "sink772@gmail.com"
+        }
+    }
+    scm {
+        url repoUrl
+    }
+}
 
 publishing {
     repositories {
@@ -35,8 +68,35 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId = GROUP
-            artifactId = 'javaee-' + project.name
+            artifactId = projectName
             from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('name', projectName)
+                root.appendNode('description', 'scorex package for Java SCORE')
+                root.appendNode('url', repoUrl)
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = rootProject.hasProperty('bintrayUser') ? "$bintrayUser" : ''
+    key = rootProject.hasProperty('bintrayKey') ? "$bintrayKey" : ''
+    publications = ['mavenJava']
+    pkg {
+        repo = 'maven'
+        name = projectName
+        licenses = ['GPL-2.0']
+        vcsUrl = 'https://github.com/sink772/javaee-scorex.git'
+        version {
+            name = project.version
+            gpg {
+                sign = true
+            }
         }
     }
 }
