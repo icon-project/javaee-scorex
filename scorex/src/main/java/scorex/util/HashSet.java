@@ -64,4 +64,20 @@ public class HashSet<E> extends AbstractCollection<E> implements Set<E> {
     public <T> T[] toArray(T[] a) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Set))
+            return false;
+        Set<?> c = (Set<?>) o;
+        if (c.size() != size())
+            return false;
+        try {
+            return containsAll(c);
+        } catch (ClassCastException | NullPointerException unused)   {
+            return false;
+        }
+    }
 }
