@@ -1,3 +1,5 @@
+[ ![Download](https://api.bintray.com/packages/sink772/maven/javaee-scorex/images/download.svg?version=0.5.0) ](https://bintray.com/sink772/maven/javaee-scorex/0.5.0/link)
+
 # scorex package for Java SCORE
 
 This repository contains some useful Java classes that can be used as substitutes for some Java standard I/O and collections frameworks when you write Java SCORE.
