@@ -1,4 +1,4 @@
-[ ![Download](https://api.bintray.com/packages/sink772/maven/javaee-scorex/images/download.svg?version=0.5.0) ](https://bintray.com/sink772/maven/javaee-scorex/0.5.0/link)
+[ ![Download](https://api.bintray.com/packages/sink772/maven/javaee-scorex/images/download.svg) ](https://bintray.com/sink772/maven/javaee-scorex/_latestVersion)
 
 # scorex package for Java SCORE
 
@@ -10,7 +10,7 @@ All classes are under `scorex` package namespace and can be mapped to the corres
 You can include this package from JCenter by adding the following dependency in your `build.gradle`.
 
 ```groovy
-implementation 'com.github.sink772:javaee-scorex:0.5.0'
+implementation 'com.github.sink772:javaee-scorex:0.5.1'
 ```
 
 ## License
