@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'com.jfrog.bintray' version '1.8.5'
+    id 'signing'
 }
 
 java {
@@ -56,12 +56,13 @@ def pomConfig = {
 publishing {
     repositories {
         maven {
-            def releasesUrl = "http://ci.arch.iconloop.com/nexus/repository/maven-releases"
-            def snapshotsUrl = "http://ci.arch.iconloop.com/nexus/repository/maven-snapshots"
+            name = 'mavenCentral'
+            def releasesUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsUrl = "https://oss.sonatype.org/content/repositories/snapshots"
             url = version.endsWith('SNAPSHOT') ? snapshotsUrl : releasesUrl
             credentials {
-                username = rootProject.hasProperty('nexusUsername') ? "$nexusUsername" : ''
-                password = rootProject.hasProperty('nexusPassword') ? "$nexusPassword" : ''
+                username = rootProject.hasProperty('ossrhUsername') ? "$ossrhUsername" : ''
+                password = rootProject.hasProperty('ossrhPassword') ? "$ossrhPassword" : ''
             }
         }
     }
@@ -83,20 +84,6 @@ publishing {
     }
 }
 
-bintray {
-    user = rootProject.hasProperty('bintrayUser') ? "$bintrayUser" : ''
-    key = rootProject.hasProperty('bintrayKey') ? "$bintrayKey" : ''
-    publications = ['mavenJava']
-    pkg {
-        repo = 'maven'
-        name = projectName
-        licenses = ['GPL-2.0']
-        vcsUrl = 'https://github.com/sink772/javaee-scorex.git'
-        version {
-            name = project.version
-            gpg {
-                sign = true
-            }
-        }
-    }
+signing {
+    sign publishing.publications.mavenJava
 }
