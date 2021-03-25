@@ -11,7 +11,7 @@ You can include this package from [Maven Central](https://search.maven.org/searc
 by adding the following dependency in your `build.gradle`.
 
 ```groovy
-implementation 'com.github.sink772:javaee-scorex:0.5.1'
+implementation 'com.github.sink772:javaee-scorex:0.5.2'
 ```
 
 ## License
