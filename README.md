@@ -1,4 +1,4 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.sink772/javaee-scorex/badge.svg)](https://search.maven.org/search?q=g:com.github.sink772%20a:javaee-scorex)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/foundation.icon/javaee-scorex/badge.svg)](https://search.maven.org/search?q=g:foundation.icon%20a:javaee-scorex)
 
 # scorex package for Java SCORE
 
@@ -7,11 +7,11 @@ All classes are under `scorex` package namespace and can be mapped to the corres
 
 ## Usage
 
-You can include this package from [Maven Central](https://search.maven.org/search?q=g:com.github.sink772%20a:javaee-scorex)
+You can include this package from [Maven Central](https://search.maven.org/search?q=g:foundation.icon%20a:javaee-scorex)
 by adding the following dependency in your `build.gradle`.
 
 ```groovy
-implementation 'com.github.sink772:javaee-scorex:0.5.2'
+implementation 'foundation.icon:javaee-scorex:0.5.2'
 ```
 
 ## License
