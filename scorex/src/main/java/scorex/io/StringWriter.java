@@ -15,7 +15,8 @@ public class StringWriter extends Writer {
         if (initialSize < 0) {
             throw new IllegalArgumentException("Negative buffer size");
         }
-        buf = new StringBuffer(initialSize);
+        // we don't use the initial capacity for StringBuffer
+        buf = new StringBuffer();
     }
 
     public void write(int c) {
