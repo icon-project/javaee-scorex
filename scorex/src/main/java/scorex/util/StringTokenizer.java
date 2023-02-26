@@ -39,6 +39,19 @@ public class StringTokenizer {
         return str.substring(start, currentPosition);
     }
 
+    public int countTokens() {
+        int count = 0;
+        int currpos = currentPosition;
+        while (currpos < maxPosition) {
+            currpos = skipDelimiters(currpos);
+            if (currpos >= maxPosition)
+                break;
+            currpos = scanToken(currpos);
+            count++;
+        }
+        return count;
+    } 
+
     private int skipDelimiters(int startPos) {
         if (delimiters == null) {
             throw new NullPointerException();
