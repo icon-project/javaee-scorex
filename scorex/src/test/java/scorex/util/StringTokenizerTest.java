@@ -26,4 +26,12 @@ class StringTokenizerTest {
         }
         assertEquals(input, builder.toString());
     }
+
+    @Test
+    void countTokens() {
+        String input = "a,b,c,d,e";
+        StringTokenizer tokenizer = new StringTokenizer(input, ",");
+        int count = tokenizer.countTokens();
+        assertEquals(5, count);
+    }
 }
