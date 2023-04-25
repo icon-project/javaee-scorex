@@ -2,8 +2,11 @@ package scorex.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class ArrayListTest {
@@ -135,6 +138,35 @@ class ArrayListTest {
         } catch (RuntimeException e) {
             // Success: ConcurrentModification
         }
+    }
+
+    @Test
+    void subList() {
+        List<String> recents = new ArrayList<>() {{
+            add("1");
+            add("2");
+            add("3");
+            add("4");
+            add("5");
+        }};
+        assertEquals(5, recents.size());
+        assertEquals("[1, 2, 3, 4, 5]", recents.toString());
+        assertTrue(recents.contains("2"));
+
+        recents = recents.subList(1, 5);
+        assertEquals(4, recents.size());
+        assertEquals("[2, 3, 4, 5]", recents.toString());
+        assertTrue(recents.contains("2"));
+
+        recents.add("6");
+        assertEquals(5, recents.size());
+        assertEquals("[2, 3, 4, 5, 6]", recents.toString());
+        assertTrue(recents.contains("2"));
+
+        recents = recents.subList(1, 4);
+        assertEquals(3, recents.size());
+        assertEquals("[3, 4, 5]", recents.toString());
+        assertFalse(recents.contains("2"));
     }
 
     @Test
