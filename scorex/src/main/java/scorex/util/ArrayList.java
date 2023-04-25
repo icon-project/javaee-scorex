@@ -9,13 +9,13 @@ import java.util.NoSuchElementException;
 /**
  * A simple resizable-array implementation of the List interface.
  */
-public class ArrayList<E> implements List<E> {
+public class ArrayList<E> extends AbstractList<E> implements List<E> {
 
     private Object[] elementData;
     private int size;
-    private int modCount;
 
     public ArrayList(int initialCapacity) {
+        super();
         if (initialCapacity < 0) {
             throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
         }
@@ -223,6 +223,15 @@ public class ArrayList<E> implements List<E> {
         return numNew != 0;
     }
 
+    protected void removeRange(int fromIndex, int toIndex) {
+        modCount++;
+        int numMoved = size - toIndex;
+        System.arraycopy(elementData, toIndex, elementData, fromIndex, numMoved);
+        int newSize = size - (toIndex-fromIndex);
+        while (size != newSize)
+            elementData[--size] = null;
+    }
+
     @Override
     public boolean removeAll(Collection<?> c) {
         return batchRemove(c, false);
@@ -255,59 +264,6 @@ public class ArrayList<E> implements List<E> {
             }
         }
         return modified;
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        for (Object obj : c) {
-            if (!this.contains(obj)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof List))
-            return false;
-
-        ListIterator<E> e1 = listIterator();
-        ListIterator e2 = ((List) o).listIterator();
-        while (e1.hasNext() && e2.hasNext()) {
-            E o1 = e1.next();
-            Object o2 = e2.next();
-            if (!(o1==null ? o2==null : o1.equals(o2)))
-                return false;
-        }
-        return !(e1.hasNext() || e2.hasNext());
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = 1;
-        for (E e : this)
-            hashCode = 31 * hashCode + (e==null ? 0 : e.hashCode());
-        return hashCode;
-    }
-
-    @Override
-    public String toString() {
-        Iterator<E> i = iterator();
-        if (!i.hasNext())
-            return "[]";
-
-        StringBuilder sb = new StringBuilder();
-        sb.append('[');
-        for (;;) {
-            E e = i.next();
-            sb.append(e == this ? "(this Collection)" : e);
-            if (!i.hasNext())
-                return sb.append(']').toString();
-            sb.append(", ");
-        }
     }
 
     @Override
@@ -442,14 +398,14 @@ public class ArrayList<E> implements List<E> {
                     ") > toIndex(" + toIndex + ")");
     }
 
-    private class SubList extends ArrayList<E> {
-        private final ArrayList<E> parent;
+    private class SubList extends AbstractList<E> {
+        private final AbstractList<E> parent;
         private final int parentOffset;
         private final int offset;
         private int size;
-        private int modCount;
 
-        SubList(ArrayList<E> parent, int offset, int fromIndex, int toIndex) {
+        SubList(AbstractList<E> parent,
+                int offset, int fromIndex, int toIndex) {
             this.parent = parent;
             this.parentOffset = fromIndex;
             this.offset = offset + fromIndex;
@@ -493,6 +449,14 @@ public class ArrayList<E> implements List<E> {
             return result;
         }
 
+        protected void removeRange(int fromIndex, int toIndex) {
+            checkForComodification();
+            parent.removeRange(parentOffset + fromIndex,
+                               parentOffset + toIndex);
+            this.modCount = parent.modCount;
+            this.size -= toIndex - fromIndex;
+        }
+
         public boolean addAll(Collection<? extends E> c) {
             return addAll(this.size, c);
         }
@@ -524,14 +488,14 @@ public class ArrayList<E> implements List<E> {
                 int expectedModCount = ArrayList.this.modCount;
 
                 public boolean hasNext() {
-                    return cursor != ArrayList.SubList.this.size;
+                    return cursor != SubList.this.size;
                 }
 
                 @SuppressWarnings("unchecked")
                 public E next() {
                     checkForComodification();
                     int i = cursor;
-                    if (i >= ArrayList.SubList.this.size)
+                    if (i >= SubList.this.size)
                         throw new NoSuchElementException();
                     Object[] elementData = ArrayList.this.elementData;
                     if (offset + i >= elementData.length)
@@ -570,7 +534,7 @@ public class ArrayList<E> implements List<E> {
                         throw new IllegalStateException();
                     checkForComodification();
                     try {
-                        ArrayList.SubList.this.remove(lastRet);
+                        SubList.this.remove(lastRet);
                         cursor = lastRet;
                         lastRet = -1;
                         expectedModCount = ArrayList.this.modCount;
@@ -594,7 +558,7 @@ public class ArrayList<E> implements List<E> {
                     checkForComodification();
                     try {
                         int i = cursor;
-                        ArrayList.SubList.this.add(i, e);
+                        SubList.this.add(i, e);
                         cursor = i + 1;
                         lastRet = -1;
                         expectedModCount = ArrayList.this.modCount;
