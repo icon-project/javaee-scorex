@@ -31,7 +31,12 @@ public abstract class AbstractCollection<E> implements Collection<E> {
     }
 
     public Object[] toArray() {
-        throw new UnsupportedOperationException();
+        Object[] r = new Object[size()];
+        Iterator<E> it = iterator();
+        for (int i = 0; i < r.length; i++) {
+            r[i] = it.next();
+        }
+        return r;
     }
 
     public <T> T[] toArray(T[] a) {

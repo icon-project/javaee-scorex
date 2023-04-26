@@ -167,6 +167,9 @@ class ArrayListTest {
         assertEquals(3, recents.size());
         assertEquals("[3, 4, 5]", recents.toString());
         assertFalse(recents.contains("2"));
+
+        List<String> newCopy = new ArrayList<>(recents);
+        assertEquals(newCopy, recents);
     }
 
     @Test
